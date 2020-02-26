@@ -33,6 +33,7 @@ def run_search(dict_file, postings_file, queries_file, results_file):
             output = searcher.evaluate_query()
             o.write(output + '\n')
             searcher.clear_postings()
+            # Explicitly call the garbage collector to free up memory of unreferenced objects.
             gc.collect()
         f.close()
         o.close()

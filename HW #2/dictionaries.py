@@ -1,6 +1,10 @@
 import pickle
 
 
+# Dictionary class that stores all terms.
+# Contains a mapping of `terms` to (term, offset).
+# Pickle is used to serialise and deserialise this class from disk.
+
 class Dictionaries:
     def __init__(self, file_name):
         self.dict = {}

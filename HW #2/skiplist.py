@@ -1,5 +1,7 @@
 from math import sqrt, floor
 
+# Represents a node in a traditional singly linked list
+
 
 class Node:
     def __init__(self, val):
@@ -26,6 +28,8 @@ class Node:
             current = current.next
         return result_string.strip()
 
+# Represents a node in the SkipList. Extends Node.
+
 
 class SkipNode(Node):
     def __init__(self, val):
@@ -41,21 +45,26 @@ class SkipNode(Node):
     def has_skip(self):
         return self.skip is not None
 
+# SkipList class that represents a SkipList, used in posting lists.
+
 
 class SkipList:
     def __init__(self, head):
         super().__init__()
         self.head = head
 
+    # Constructor for initialising a SkipList from a python list.
     @classmethod
     def create_skip_list_from_list(cls, posting):
         head = SkipList.create_skip_list(posting)
         return cls(head)
 
+    # Constructor for initialising a SkipList from file, with the head node.
     @classmethod
     def create_skip_list_from_node(cls, node):
         return cls(node)
 
+    # Create a skip list from a python list.
     @staticmethod
     def create_skip_list(posting):
         current = newhead = None
@@ -72,6 +81,7 @@ class SkipList:
         SkipList.set_skip_pointers(newhead, count)
         return newhead
 
+    # Set sqroot(n) evenly spaced skip pointers across the skip list.
     @staticmethod
     def set_skip_pointers(head, count):
         num_skip_pointers = floor(sqrt(count))
@@ -90,6 +100,7 @@ class SkipList:
                 current = current.next
                 remaining -= 1
 
+    # Returns a string representation of the SkipList
     def to_string(self):
         result_string, current = '', self.head
         while current:
@@ -97,6 +108,7 @@ class SkipList:
             current = current.next
         return result_string
 
+    # Operation for intersection between two SkipLists. Used for "AND" queries.
     @staticmethod
     def intersection(s1, s2):
         current1, current2 = s1.head, s2.head
@@ -126,6 +138,7 @@ class SkipList:
         current.next = None
         return SkipList.create_skip_list_from_node(newhead)
 
+    # Operation for union between two SkipLists. Used for "OR" queries.
     @staticmethod
     def union(s1, s2):
         current1, current2 = s1.head, s2.head
@@ -164,6 +177,8 @@ class SkipList:
             current.next = current1
         return SkipList.create_skip_list_from_node(newhead)
 
+    # Operation for intersection between a SkipList `other` and the complement of SkipList `complement`.
+    # Used for "NOT" and "AND NOT" queries.
     @staticmethod
     def intersection_complement(complement, other):
         current1, current2 = other.head, complement.head
