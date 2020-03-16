@@ -27,15 +27,17 @@ def run_search(dict_file, postings_file, queries_file, results_file):
     postings = Postings(postings_file)
     searcher = Searcher(dictionaries, postings)
 
+    result_string = ''
     with open(queries_file, 'r') as f, open(results_file, 'w') as o:
-        for query in f:
+        for i, query in enumerate(f):
             searcher.set_query(query.strip())
             output = searcher.evaluate_query()
-            o.write(output + '\n')
+            result_string += output.strip() + '\n'
             searcher.clear_postings()
             # Explicitly call the garbage collector to free up memory of unreferenced objects.
             gc.collect()
         f.close()
+        o.write(result_string.strip())
         o.close()
 
 

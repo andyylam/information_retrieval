@@ -39,6 +39,8 @@ class Searcher:
     # Helper function to process a query given its postfix expression.
     def process_query(self, expression):
         stack = []
+        if not expression:
+            return SkipList(None)
         exp = deque(expression)
         while exp:
             token = exp.popleft()
@@ -84,11 +86,17 @@ class Searcher:
     # Parse the given query.
     # Stems and lowercases the tokens to get terms, and extracts out the opeators.
     def parse_query(self, query):
+        if not query:
+            return []
         output = []
         for token in query.split(" "):
             if token[0] == '(':
                 output.append('(')
-                output.append(Searcher.stemmer.stem(word=token[1:]).lower())
+                if token[1:] in operators:
+                    output.append(token[1:])
+                else:
+                    output.append(Searcher.stemmer.stem(
+                        word=token[1:]).lower())
             elif token[-1] == ')':
                 output.append(Searcher.stemmer.stem(token[:-1]).lower())
                 output.append(')')

@@ -118,10 +118,10 @@ class SkipList:
         while current1 and current2:
             if current1.val == current2.val:
                 if not newhead:
-                    newhead = current1
+                    newhead = SkipNode(current1.val)
                     current = newhead
                 else:
-                    current.next = current1
+                    current.next = SkipNode(current1.val)
                     current = current.next
                 current1 = current1.next
                 current2 = current2.next
@@ -135,6 +135,8 @@ class SkipList:
                     current2 = current2.skip
                 else:
                     current2 = current2.next
+        if not current:
+            return SkipList(None)
         current.next = None
         return SkipList.create_skip_list_from_node(newhead)
 
@@ -149,32 +151,38 @@ class SkipList:
 
         newhead = None
         if current1.val < current2.val:
-            newhead = current1
+            newhead = SkipNode(current1.val)
             current1 = current1.next
         else:
-            newhead = current2
+            newhead = SkipNode(current2.val)
             current2 = current2.next
 
         current = newhead
         while current1 and current2:
             if current1.val < current2.val:
-                current.next = current1
+                current.next = SkipNode(current1.val)
                 current = current.next
                 current1 = current1.next
             elif current1.val == current2.val:
-                current.next = current1
+                current.next = SkipNode(current1.val)
                 current = current.next
                 current1 = current1.next
                 current2 = current2.next
             else:
-                current.next = current2
+                current.next = SkipNode(current2.val)
                 current = current.next
                 current2 = current2.next
 
         if not current1:
-            current.next = current2
+            while current2:
+                current.next = SkipNode(current2.val)
+                current = current.next
+                current2 = current2.next
         else:
-            current.next = current1
+            while current1:
+                current.next = SkipNode(current1.val)
+                current = current.next
+                current1 = current1.next
         return SkipList.create_skip_list_from_node(newhead)
 
     # Operation for intersection between a SkipList `other` and the complement of SkipList `complement`.
@@ -191,22 +199,24 @@ class SkipList:
         while current1 and current2:
             if current1.val < current2.val:
                 if not newhead:
-                    newhead = current1
+                    newhead = SkipNode(current1.val)
                     current = newhead
                 else:
-                    current.next = current1
+                    current.next = SkipNode(current1.val)
                     current = current.next
                 current1 = current1.next
             elif current1.val == current2.val:
                 current1 = current1.next
                 current2 = current2.next
             else:
-                while current2 and current2.val < current1.val:
-                    current2 = current2.next
-
+                current2 = current2.next
         if not current2:
-            if not current:
-                newhead = current1
-            else:
-                current.next = current1
+            while current1:
+                if not current:
+                    newhead = SkipNode(current1.val)
+                    current = newhead
+                else:
+                    current.next = SkipNode(current1.val)
+                    current = current.next
+                current1 = current1.next
         return SkipList.create_skip_list_from_node(newhead)
