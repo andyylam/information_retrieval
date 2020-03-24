@@ -28,13 +28,14 @@ class Searcher:
             for word in word_tokenize(sentence):
                 query_terms.append(self.stemmer.stem(word=word.lower()))
 
+        # Get mapping of terms to term frequency first, before computing term to weights
         term_to_weights = Counter(query_terms)
 
         for term in term_to_weights:
             if self.token_in_vocab(term):
                 idf, postings_list = self.get_postings(term)
                 query_tf = get_term_frequency_weight(term_to_weights[term])
-                # Calculate weight with tf * idf
+                # Calculate weight with tf * idf and assign weight to term
                 weight = idf * query_tf
                 term_to_weights[term] = weight
 
@@ -50,6 +51,7 @@ class Searcher:
                     scores[docID] += term_to_weights[term] * \
                         doc_tf / query_length
 
+        # Get top 10 scoring documents with a heap
         heap = [(-value, key) for key, value in scores.items()]
         largest = heapq.nsmallest(10, heap)
         return ' '.join(map(lambda x: str(x[1]), largest))

@@ -3,8 +3,6 @@ import numpy as np
 
 # Utility class that has low level methods for tf x idf calculations
 
-# ===================== tf x idf calculations =====================
-
 
 def get_term_frequency_weight(tf):
     if not tf:
