@@ -1,0 +1,22 @@
+1. In this assignment, we didn't ask you to support phrasal queries, which is a feature that is typically supported in web search engines. Describe how you would support phrasal search in conjunction with the VSM model. A sketch of the algorithm is sufficient. (For those of you who like a challenge, please go ahead and implement this feature in your submission but clearly demarcate it in your code and allow this feature to be turned on or off using the command line switch "-x" (where "-x" means to turn on the extended processing of phrasal queries). We will give a small bonus to submissions that achieve this functionality correctly).
+
+The representation of documents as vectors is fundamentally lossy: the relative order of terms in a document is lost in the encoding of a document as a vector. Thus an index built for vector space retrieval cannot, in general, be used for phrase queries. Therefore, we need to support 2 underlying indices: both the VSM and positional index. We can then support phrase queries as such:
+
+1.  Run the user-generated query string as a phrase query. Rank them by vector space scoring using as query the vector consisting of the 3 terms rising interest rates.
+2.  If fewer than ten documents contain the phrase rising interest rates, run the two 2-term phrase queries rising interest and interest rates; rank these using vector space scoring, as well.
+3.  If we still have fewer than ten results, run the vector space query consisting of the three individual query terms.
+
+==========================================
+
+2.  Describe how your search engine reacts to long documents and long queries as compared to short documents and queries. Is the normalization you use sufficient to address the problems (see Section 6.4.4 for a hint)? In your judgement, is the ltc.lnc scheme (n.b., not the ranking scheme you were asked to implement) sufficient for retrieving documents from the Reuters-21578 collection?
+
+According to 6.4.4, first, longer documents will - as a result of containing more terms - have higher tf values. Second, longer documents contain more distinct terms. These factors can conspire to raise the scores of longer documents, which (at least for some information needs) is unnatural. An implementation that normalized the vectors with document length therefore exists to solve this unintended effect.
+
+The ltc lnc scheme is different from the scheme we implemented in that it asks us to consider the idf values for terms in the query rather than in the document. However, this does not make a difference, as we only need to consider the idf value in one case. Hence, I feel that this is not sufficient for retrieving documents.
+
+==========================================
+
+3.  Do you think zone or field parametric indices would be useful for practical search in the Reuters collection? Note: the Reuters collection does have metadata for each article but the quality of the metadata is not uniform, nor are the metadata classifications uniformly applied (some documents have it, some don't).
+
+
+Yes, I think zone or field parametric indices would be useful for practical search, especially if we are looking for particular metadata, like a given date or a given author. Even though the classifications are not uniformly applied (would lead to loss in recall), and the classifications are not uniform, we can still narrow our search for particular types of meta data by making use of zone/field parametric indices.
